@@ -1,22 +1,17 @@
-<!--
-Input field voor:
+<?php
 
-Voornaam (verplicht)
+include 'database.php';
 
-Tussenvoegsel (optioneel)
+$db = new database('localhost', 'root', '', 'project1', 'utf8');
+$db->executeQueryExample();
 
-Achternaam (verplicht)
+?>
 
-E-mail (verplicht)
 
-gebruikersnaam(verplicht)
 
-wachtwoord (verplicht)
 
-Herhaal wachtwoord (verplicht)
 
-een knop om een gebruiker te worden, zodat je later naar de database geschreven kunt worden.
- -->
+
 <!DOCTYPE html>
 <html>
 <head>

@@ -1,23 +1,43 @@
-<!DOCTYPE html>
+<?php
+
+include 'database.php';
+include 'helper.php';
+
+// check the signup.php file for explanation on code
+if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit']) && !empty($_POST['submit'])){
+    $fields = ['uname', 'pwd'];
+
+    $obj = new Helper();
+    $fields_validated = $obj->field_validation($fields);
+
+    if($fields_validated){
+        $uname = trim($_POST['uname']);
+        $password = trim($_POST['pwd']);
+        
+        $db = new database('localhost', 'root', '', 'project1', 'utf8');
+
+        // user redirected to welcome page in case of succesful login.
+        // unsuccessfull login results in an error message (string)
+        $loginError = $db->login($uname, $password);
+    }
+}
+?>
+
 <html>
-<head>
-	<title></title>
-</head>
-<body>
-	<form method="post" action="" name="signup-form">
-    	<div class="form-element">
-       		<label>Gebruikersnaam</label>
-        	<input type="text" name="username" pattern="[a-zA-Z0-9]+" required />
-    	</div>
-    	<div class="form-element">
-        	<label>Wachtwoord</label>
-        	<input type="password" name="password" required />
-    	</div>
-    	<button type="submit" name="register" value="register">login</button>
+    <head>
+            <title>Login</title>
 
-    	<a href="./signup.php">login</a>
-    	<a href="./lostpsw.php">Wachtwoord vergeten</a>
-	</form>
-
-</body>
+            <!-- link cascading style sheet -->
+            <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <form action="index.php" method="post">
+            <input type="text" name="uname" placeholder="Username" required /><br>
+            <input type="password" name="pwd" placeholder="Password" required /><br>
+            <span><?php echo ((isset($loginError) && $loginError != '') ? $loginError ."<br>" : '')?></span>
+            <input type="submit" name='submit' /><br>
+            <a href="signup.php" >New user? Sign up!</a><br>
+            <a href="lostpwd.php">Forgot password?</a><br>
+        </form>
+    </body>
 </html>

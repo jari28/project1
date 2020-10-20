@@ -1,83 +1,52 @@
--- phpMyAdmin SQL Dump
--- version 5.0.2
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1
--- Gegenereerd op: 21 sep 2020 om 15:06
--- Serverversie: 10.4.13-MariaDB
--- PHP-versie: 7.4.7
+DROP DATABASE IF EXISTS project1;
+-- create new db
+CREATE DATABASE project1;
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
+-- select project 1 as the default database
+USE project1;
 
+CREATE TABLE usertype(
+    id INT NOT NULL AUTO_INCREMENT,
+    type VARCHAR(255),
+    created_at DATETIME NOT NULL,
+    updated_at DATETIME NOT NULL,
+    PRIMARY KEY(id)
+);
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+-- statement to create table account
+CREATE TABLE account(
+    id INT NOT NULL AUTO_INCREMENT,
+    type_id INT NOT NULL,
+    username VARCHAR(250) UNIQUE,
+    email VARCHAR(250) UNIQUE NOT NULL,
+    password VARCHAR(250) NOT NULL,
+    created_at DATETIME NOT NULL,
+    updated_at DATETIME NOT NULL,
+    PRIMARY KEY(id),
+    FOREIGN KEY(type_id) REFERENCES usertype(id)
+);
 
---
--- Database: `project1`
---
+-- statement to create table persoon
+CREATE TABLE person(
+    id INT NOT NULL AUTO_INCREMENT,
+    account_id INT NOT NULL,
+    first_name VARCHAR(250) NOT NULL,
+    middle_name VARCHAR(250),
+    last_name VARCHAR(250) NOT NULL,
+    created_at DATETIME NOT NULL,
+    updated_at DATETIME NOT NULL,
+    PRIMARY KEY(id),
+    FOREIGN KEY(account_id) REFERENCES account(id)
+);
 
--- --------------------------------------------------------
+-- insert entry into table usertype (admin)
+INSERT INTO usertype VALUES (NULL, 'admin', now(), now());
 
---
--- Tabelstructuur voor tabel `account`
---
+-- insert entry into table usertype (user; all signed up users are by default of type user.)
+INSERT INTO usertype VALUES (NULL, 'user', now(), now());
 
-CREATE TABLE `account` (
-  `Id` int(11) NOT NULL,
-  `Email` varchar(40) DEFAULT NULL,
-  `psword` varchar(150) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+-- insert entry into table acount (assumed usertype id to be 1, might not be the case)
+INSERT INTO account VALUES (NULL, 1, 'nilu', 'n.lican1@rocva.nl', MD5('admin'), now(), now());
 
--- --------------------------------------------------------
-
---
--- Tabelstructuur voor tabel `persoon`
---
-
-CREATE TABLE `persoon` (
-  `id` int(11) NOT NULL,
-  `Voornaam` varchar(40) DEFAULT NULL,
-  `Tussenvoegsel` varchar(40) DEFAULT NULL,
-  `Achternaam` varchar(40) DEFAULT NULL,
-  `Gebruikersnaam` varchar(40) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Indexen voor geëxporteerde tabellen
---
-
---
--- Indexen voor tabel `account`
---
-ALTER TABLE `account`
-  ADD PRIMARY KEY (`Id`),
-  ADD UNIQUE KEY `Email` (`Email`);
-
---
--- Indexen voor tabel `persoon`
---
-ALTER TABLE `persoon`
-  ADD PRIMARY KEY (`id`);
-
---
--- Beperkingen voor geëxporteerde tabellen
---
-
---
--- Beperkingen voor tabel `persoon`
---
-ALTER TABLE `persoon`
-  ADD CONSTRAINT `persoon_ibfk_1` FOREIGN KEY (`id`) REFERENCES `account` (`Id`);
-COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
-INSERT INTO persoon VALUES (1,'kas', 'van', 'Steer','yourAdmin');
-
+-- insert entry into persoon, use account_id from table account (assumed account id to be 2, might not be the case)
+INSERT INTO person VALUES (null, 2, 'nilu', NULL, 'lican', now(), now());
